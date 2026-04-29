@@ -48,6 +48,7 @@
 }
 
 :root {
+  --scrollbar-size: 6px;
   --background: oklch(1 0 0);
   --foreground: oklch(0.147 0.004 49.3);
   --card: oklch(1 0 0);
@@ -129,5 +130,14 @@
   }
   html {
     @apply font-mono;
+  }
+  ::-webkit-scrollbar {
+    @apply h-[var(--scrollbar-size)] w-[var(--scrollbar-size)];
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-accent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary;
   }
 }
