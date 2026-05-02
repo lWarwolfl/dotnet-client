@@ -1,5 +1,5 @@
-import Footer from '@/components/layout/footer'
-import Header from '@/components/layout/header'
+import Footer from '@/features/landing/components/layout/footer'
+import Header from '@/features/landing/components/layout/header'
 import WrappedProviders from '@/components/providers/wrapped-providers'
 import ReactScan from '@/components/utils/react-scan'
 import { cn } from '@/lib/utils'
