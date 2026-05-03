@@ -29,7 +29,7 @@ export function useLinks() {
     const panelItems = [
       {
         type: 'main',
-        name: 'Home',
+        name: 'Dashboard',
         icon: <RiHome4Line />,
         path: '/dashboard',
         breadcrumb: [],
