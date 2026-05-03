@@ -7,81 +7,51 @@ import { RiBuildingLine, RiStoreLine } from '@remixicon/react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export type ActivityCardProps = React.ComponentProps<'div'> & {
+export type ActivityCardProps = Omit<React.ComponentProps<typeof Link>, 'href'> & {
   data: ActivityType
-  body?: boolean
+  href?: string
 }
 
-export default function ActivityCard({ data, className, body, ...props }: ActivityCardProps) {
+export default function ActivityCard({ data, className, href, ...props }: ActivityCardProps) {
   const image_url = `/categories/${data.category}.jpg`
+  const link = href ? href : `/activity/${data.id}`
 
   return (
-    <div
+    <Link
+      href={link}
       className={cn(
-        'bg-card ring-border hover:bg-muted flex w-full flex-wrap items-start gap-4 rounded-lg p-4 ring transition-colors ring-inset',
+        'bg-card group ring-border hover:bg-muted flex w-full flex-col items-start gap-4 rounded-lg p-4 ring transition-colors ring-inset',
         className
       )}
       {...props}
     >
-      {body ? (
-        <>
-          <div className="group flex items-start gap-4 pe-3 underline-offset-2 md:items-center">
-            <Image
-              alt={data.title}
-              width={200}
-              height={200}
-              src={image_url}
-              className="size-16 rounded-md object-cover object-center"
-            />
+      <Image
+        alt={data.title}
+        width={600}
+        height={600}
+        src={image_url}
+        className="h-50 w-auto rounded-md object-cover object-center"
+      />
 
-            <ActivityCard.Content data={data} />
-          </div>
+      <div className="flex flex-col gap-3 underline-offset-2">
+        <h3 className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-lg font-medium">
+          <span className="group-hover:underline">{data.title}</span>
 
-          <div
-            className="prose max-h-[46dvh] basis-full overflow-y-auto"
-            dangerouslySetInnerHTML={{ __html: data.description || '' }}
-          />
-        </>
-      ) : (
-        <>
-          <Image
-            alt={data.title}
-            width={200}
-            height={200}
-            src={image_url}
-            className="size-16 rounded-md object-cover object-center"
-          />
+          <Badge>
+            {data.city}
 
-          <Link
-            href={`/activity/${data.id}`}
-            className="group flex flex-col gap-1 underline-offset-2"
-          >
-            <ActivityCard.Content data={data} />
+            <RiBuildingLine className="size-7 shrink-0" />
+          </Badge>
 
-            <p className="line-clamp-2 text-sm group-hover:underline">{data.description}</p>
-          </Link>
-        </>
-      )}
-    </div>
-  )
-}
+          <Badge className="h-fit whitespace-break-spaces" variant="outline">
+            {data.venue}
 
-ActivityCard.Content = function Content({ data }: { data: ActivityType }) {
-  return (
-    <h3 className="flex flex-wrap items-center gap-3 text-lg font-medium">
-      <span className="group-hover:underline">{data.title}</span>
+            <RiStoreLine className="size-7 shrink-0" />
+          </Badge>
+        </h3>
 
-      <Badge>
-        {data.city}
-
-        <RiBuildingLine />
-      </Badge>
-
-      <Badge variant="outline">
-        {data.venue}
-
-        <RiStoreLine />
-      </Badge>
-    </h3>
+        <p className="line-clamp-2 text-sm">{data.description}</p>
+      </div>
+    </Link>
   )
 }

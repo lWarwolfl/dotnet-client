@@ -1,5 +1,3 @@
-import Footer from '@/features/landing/components/layout/footer'
-import Header from '@/features/landing/components/layout/header'
 import WrappedProviders from '@/components/providers/wrapped-providers'
 import ReactScan from '@/components/utils/react-scan'
 import { cn } from '@/lib/utils'
@@ -69,13 +67,9 @@ export default function RootLayout({
       className={cn('h-full', 'antialiased', 'font-mono', jetbrainsMono.variable)}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col px-4 py-6">
+      <body className="flex min-h-full flex-col">
         <WrappedProviders>
-          <Header />
-
           {children}
-
-          <Footer />
 
           <ReactScan />
         </WrappedProviders>
