@@ -3,7 +3,7 @@
 import { ResponsiveDialog } from '@/components/common/responsive-dialog'
 import { SubmitButton } from '@/components/common/submit-button'
 import { Button } from '@/components/ui/button'
-import { clientHooks } from '@/features/api/client'
+import { privateClientHooks } from '@/features/api/client'
 import { ActivityType } from '@/features/api/types/entities'
 import { RiDeleteBinLine } from '@remixicon/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -17,7 +17,7 @@ export default function ActivityDelete({ data }: ActivityDeleteProps) {
   const [open, setOpen] = useState(false)
 
   const { mutate: mutateDeleteActivity, isPending: isPendingDeleteActivity } =
-    clientHooks.useMutation('delete', '/api/Activities/{id}')
+    privateClientHooks.useMutation('delete', '/api/Activities/{id}')
 
   function onSubmit() {
     mutateDeleteActivity(
@@ -28,7 +28,7 @@ export default function ActivityDelete({ data }: ActivityDeleteProps) {
           setOpen(false)
           queryClient.invalidateQueries({
             refetchType: 'all',
-            ...clientHooks.queryOptions('get', '/api/Activities'),
+            ...privateClientHooks.queryOptions('get', '/api/Activities'),
           })
         },
       }

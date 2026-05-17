@@ -36,7 +36,10 @@ export default function ReactQueryProvider(props: ReactQueryProviderProps) {
             refetchOnReconnect: false,
             staleTime: 0,
             placeholderData: keepPreviousData,
-            retry: 3,
+            retry: (failureCount, error) => {
+              if (error.message.includes('401')) return false
+              return failureCount < 3
+            },
           },
           dehydrate: {
             shouldDehydrateQuery: (query) =>

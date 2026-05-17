@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { clientHooks } from '@/features/api/client'
+import { privateClientHooks } from '@/features/api/client'
 import { ActivityType } from '@/features/api/types/entities'
 import {
   activityUpdateSchema,
@@ -60,7 +60,7 @@ export default function ActivityUpdateDrawer({ data }: ActivityUpdateDrawerProps
   })
 
   const { mutate: mutateUpdateActivity, isPending: isPendingUpdateActivity } =
-    clientHooks.useMutation('put', '/api/Activities')
+    privateClientHooks.useMutation('put', '/api/Activities')
 
   function onSubmit(values: ActivityUpdateSchemaProps) {
     const { date, ...rest } = values
@@ -75,7 +75,7 @@ export default function ActivityUpdateDrawer({ data }: ActivityUpdateDrawerProps
           form.reset(form.formState.defaultValues)
           queryClient.invalidateQueries({
             refetchType: 'all',
-            ...clientHooks.queryOptions('get', '/api/Activities'),
+            ...privateClientHooks.queryOptions('get', '/api/Activities'),
           })
         },
       }

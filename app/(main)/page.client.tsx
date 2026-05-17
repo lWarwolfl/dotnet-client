@@ -1,10 +1,10 @@
 'use client'
 
-import { clientHooks } from '@/features/api/client'
+import { privateClientHooks } from '@/features/api/client'
 import ActivityCard from '@/features/landing/components/activity-card'
 
 export default function HomeClient() {
-  const { isFetching, data } = clientHooks.useQuery('get', '/api/Activities')
+  const { isFetching, data } = privateClientHooks.useQuery('get', '/api/Activities')
 
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

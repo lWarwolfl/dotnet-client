@@ -2,7 +2,7 @@
 
 import { TableSkeleton } from '@/components/common/table-skeleton'
 import { DataTable } from '@/components/ui/data-table'
-import { clientHooks } from '@/features/api/client'
+import { privateClientHooks } from '@/features/api/client'
 import { ActivityType } from '@/features/api/types/entities'
 import ActivityDelete from '@/features/panel/components/activities/activity-delete'
 import ActivityUpdateDrawer from '@/features/panel/components/activities/activity-update-drawer'
@@ -12,7 +12,7 @@ import Image from 'next/image'
 
 export default function ActivityTable() {
   // const [currentPage, setCurrentPage] = useState<number>(1)
-  const { data, isLoading } = clientHooks.useQuery('get', '/api/Activities')
+  const { data, isLoading } = privateClientHooks.useQuery('get', '/api/Activities')
 
   // function onPageChange(page: number) {
   //   setCurrentPage(page)

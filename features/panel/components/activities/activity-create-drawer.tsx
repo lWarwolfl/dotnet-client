@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { clientHooks } from '@/features/api/client'
+import { privateClientHooks } from '@/features/api/client'
 import {
   activityCreateSchema,
   ActivityCreateSchemaProps,
@@ -55,7 +55,7 @@ export default function ActivityCreateDrawer() {
   })
 
   const { mutate: mutateCreateActivity, isPending: isPendingCreateActivity } =
-    clientHooks.useMutation('post', '/api/Activities')
+    privateClientHooks.useMutation('post', '/api/Activities')
 
   function onSubmit(values: ActivityCreateSchemaProps) {
     const { date, ...rest } = values
@@ -70,7 +70,7 @@ export default function ActivityCreateDrawer() {
           form.reset(form.formState.defaultValues)
           queryClient.invalidateQueries({
             refetchType: 'all',
-            ...clientHooks.queryOptions('get', '/api/Activities'),
+            ...privateClientHooks.queryOptions('get', '/api/Activities'),
           })
         },
       }

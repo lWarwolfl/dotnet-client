@@ -1,7 +1,7 @@
+import { privateMiddleware } from '@/features/api/middlewares/private'
+import { publicMiddleware } from '@/features/api/middlewares/public'
 import createFetchClient from 'openapi-fetch'
 import createQueryClient from 'openapi-react-query'
-
-import { authMiddleware } from './middlewares/auth'
 import type { paths } from './types/schema'
 
 /**
@@ -10,11 +10,17 @@ import type { paths } from './types/schema'
  * @param {{ baseUrl: string }} options - The options for the fetch client.
  * @returns {FetchClient<paths>} - The new fetch client.
  */
-const client = createFetchClient<paths>({
+const publicClient = createFetchClient<paths>({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
+  credentials: 'include',
+})
+const privateClient = createFetchClient<paths>({
+  baseUrl: process.env.NEXT_PUBLIC_API_URL,
+  credentials: 'include',
 })
 
-client.use(authMiddleware)
+publicClient.use(publicMiddleware)
+privateClient.use(privateMiddleware)
 
 /**
  * Creates a new react query client for the given fetch client.
@@ -23,6 +29,7 @@ client.use(authMiddleware)
  * @param {FetchClient<paths>} fetchClient - The fetch client to use for the query client.
  * @returns {QueryClient<paths>} - The new query client.
  */
-const clientHooks = createQueryClient<paths>(client)
+const publicClientHooks = createQueryClient<paths>(publicClient)
+const privateClientHooks = createQueryClient<paths>(privateClient)
 
-export { client, clientHooks }
+export { privateClient, privateClientHooks, publicClient, publicClientHooks }
