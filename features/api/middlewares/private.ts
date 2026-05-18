@@ -1,3 +1,4 @@
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import type { Middleware } from 'openapi-fetch'
 import createFetchClient from 'openapi-fetch'
 import type { paths } from '../types/schema'
@@ -32,10 +33,31 @@ async function getAntiforgeryToken(): Promise<string | undefined> {
   return undefined
 }
 
+async function getAuthCookie(): Promise<RequestCookie | undefined> {
+  const isServer = typeof window === 'undefined'
+
+  if (isServer) {
+    try {
+      const { cookies } = await import('next/headers')
+      const cookieStore = await cookies()
+      return cookieStore.get('.AspNetCore.Identity.Application')
+    } catch {
+      return undefined
+    }
+  }
+
+  return undefined
+}
+
 export const privateMiddleware: Middleware = {
   async onRequest({ request }) {
     const isServer = typeof window === 'undefined'
     let token = await getAntiforgeryToken()
+    const authCookie = await getAuthCookie()
+
+    if (authCookie) {
+      request.headers.set('Cookie', `${authCookie?.name}=${authCookie?.value}`)
+    }
 
     if (!token && isServer) {
       return request
@@ -62,10 +84,9 @@ export const privateMiddleware: Middleware = {
   async onResponse({ response }) {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
+
       throw new Error(
-        response.status === 401
-          ? '401 Unauthorized'
-          : errorData.message || `${response.status} ${response.statusText}`
+        response.status === 401 ? '401 Unauthorized' : errorData.title || `${response.status} Error`
       )
     }
     return response

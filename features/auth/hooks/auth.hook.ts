@@ -6,10 +6,16 @@ function useSignIn() {
   return { signIn, ...rest }
 }
 
-function useSignOut() {
-  const { mutate: signOut, ...rest } = publicClientHooks.useMutation('post', '/api/Account/logout')
+function useRegister() {
+  const { mutate: register, ...rest } = publicClientHooks.useMutation('post', '/api/register')
 
-  return { signOut, ...rest }
+  return { register, ...rest }
+}
+
+function useLogout() {
+  const { mutate: logout, ...rest } = publicClientHooks.useMutation('post', '/api/Account/logout')
+
+  return { logout, ...rest }
 }
 
 function useForgotPassword() {
@@ -32,7 +38,8 @@ function useResetPassword() {
 
 export const authHooks = {
   useSignIn,
-  useSignOut,
+  useRegister,
+  useLogout,
   useForgotPassword,
   useResetPassword,
 }

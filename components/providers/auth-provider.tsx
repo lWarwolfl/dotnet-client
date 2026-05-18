@@ -5,7 +5,7 @@ import { createContext, memo, useContext, useState, type PropsWithChildren } fro
 import { createStore, useStore, type StoreApi } from 'zustand'
 
 type AuthProvider = {
-  user: UserType | null
+  user: UserType | undefined | null
   updateUser: (user: UserType) => void
 }
 
@@ -13,7 +13,7 @@ const AuthContext = createContext<StoreApi<AuthProvider> | undefined>(undefined)
 export const AuthProvider = memo(function UserProvider({
   children,
   user,
-}: PropsWithChildren<{ user: UserType | null }>) {
+}: PropsWithChildren<{ user: UserType | undefined | null }>) {
   const [store] = useState(() =>
     createStore<AuthProvider>((set) => ({
       user: user,

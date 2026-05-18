@@ -1,21 +1,21 @@
 'use client'
 
+import { StyledLink } from '@/components/common/styled-link'
 import { SubmitButton } from '@/components/common/submit-button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useSignInForm } from '@/features/auth/hooks/useSignInForm'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Controller } from 'react-hook-form'
 import { toast } from 'sonner'
 
-export function LoginPageClient() {
+export function SignInPageClient() {
   const router = useRouter()
 
   const { form, isAuthPending, onSubmit } = useSignInForm({
     onSuccess: () => {
-      toast.success('Successful login! redirecting now')
+      toast.success('Welcome dear user! redirecting now')
 
       router.push('/')
     },
@@ -77,8 +77,15 @@ export function LoginPageClient() {
                 Sign in
               </SubmitButton>
 
-              <FieldDescription className="text-center">
-                Forgot your password? <Link href="/auth/forgot">Reset here</Link>
+              <FieldDescription className="flex flex-col items-center gap-3">
+                <span>
+                  Forgot your password? <StyledLink href="/auth/forgot">Reset here</StyledLink>
+                </span>
+
+                <span>
+                  Haven&apos;t created an account yet?{' '}
+                  <StyledLink href="/auth/register">Register now</StyledLink>
+                </span>
               </FieldDescription>
             </Field>
           </FieldGroup>

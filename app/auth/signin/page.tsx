@@ -1,5 +1,5 @@
-import { LoginPageClient } from '@/app/auth/signin/page.client'
+import { SignInPageClient } from '@/app/auth/signin/page.client'
 
-export default function LoginPage() {
-  return <LoginPageClient />
+export default function SignInPage() {
+  return <SignInPageClient />
 }

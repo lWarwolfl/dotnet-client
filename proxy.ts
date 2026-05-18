@@ -18,7 +18,7 @@ export default async function proxy(request: NextRequest) {
 
   //for auth page
   else if (pathname.startsWith('/auth')) {
-    if (user) return NextResponse.redirect(new URL('/dashboard', request.url))
+    if (user) return NextResponse.redirect(new URL('/', request.url))
     return NextResponse.next()
   }
 
