@@ -1,6 +1,7 @@
 'use client'
 
 import { UserType } from '@/features/api/types/entities'
+import { getUsername } from '@/features/auth/utils'
 import { createContext, memo, useContext, useState, type PropsWithChildren } from 'react'
 import { createStore, useStore, type StoreApi } from 'zustand'
 
@@ -42,8 +43,8 @@ export function useUpdateUser() {
   return useAuth((state) => state.updateUser)
 }
 
-export function useUserName() {
+export function useUserName(characters?: number) {
   const user = useAuth((state) => state.user)
 
-  return user?.displayName || user?.email.split('@')[0] || 'User'
+  return getUsername(user, characters)
 }

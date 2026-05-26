@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { ActivityType } from '@/features/api/types/entities'
 import { cn } from '@/lib/utils'
 import { RiBuildingLine, RiStoreLine } from '@remixicon/react'
+import { format } from 'date-fns'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -26,7 +27,7 @@ export default function ActivityCard({ data, className, href, ...props }: Activi
       {...props}
     >
       <Image
-        alt={data.title}
+        alt={data.title || 'Activity Image'}
         width={600}
         height={600}
         src={image_url}
@@ -35,7 +36,14 @@ export default function ActivityCard({ data, className, href, ...props }: Activi
 
       <div className="flex flex-col gap-3 underline-offset-2">
         <h3 className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-lg font-medium">
-          <span className="group-hover:underline">{data.title}</span>
+          <span className="group-hover:underline">
+            {data.title}{' '}
+            {data.date ? (
+              <span className="text-muted-foreground text-sm">
+                {format(data.date, 'dd MMM, yyyy')}
+              </span>
+            ) : null}
+          </span>
 
           <Badge>
             {data.city}

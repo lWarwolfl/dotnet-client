@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "features/landing/components/activity-content.tsx"  ],
   "exclude": ["node_modules"]
 }

@@ -443,9 +443,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["UserInfo"];
-                        "application/json": components["schemas"]["UserInfo"];
-                        "text/json": components["schemas"]["UserInfo"];
+                        "text/plain": components["schemas"]["ProfileDto"];
+                        "application/json": components["schemas"]["ProfileDto"];
+                        "text/json": components["schemas"]["ProfileDto"];
                     };
                 };
             };
@@ -546,37 +546,14 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["Activity"][];
-                        "application/json": components["schemas"]["Activity"][];
-                        "text/json": components["schemas"]["Activity"][];
+                        "text/plain": components["schemas"]["GetActivityDto"][];
+                        "application/json": components["schemas"]["GetActivityDto"][];
+                        "text/json": components["schemas"]["GetActivityDto"][];
                     };
                 };
             };
         };
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["EditActivityDto"];
-                    "text/json": components["schemas"]["EditActivityDto"];
-                    "application/*+json": components["schemas"]["EditActivityDto"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
+        put?: never;
         post: {
             parameters: {
                 query?: never;
@@ -635,14 +612,39 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["Activity"];
-                        "application/json": components["schemas"]["Activity"];
-                        "text/json": components["schemas"]["Activity"];
+                        "text/plain": components["schemas"]["GetActivityDto"];
+                        "application/json": components["schemas"]["GetActivityDto"];
+                        "text/json": components["schemas"]["GetActivityDto"];
                     };
                 };
             };
         };
-        put?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EditActivityDto"];
+                    "text/json": components["schemas"]["EditActivityDto"];
+                    "application/*+json": components["schemas"]["EditActivityDto"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         post?: never;
         delete: {
             parameters: {
@@ -669,6 +671,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Activities/{id}/attend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -679,21 +716,6 @@ export interface components {
             /** Format: int64 */
             expiresIn: number | string;
             refreshToken: string;
-        };
-        Activity: {
-            id?: string;
-            title: string;
-            /** Format: date-time */
-            date?: string;
-            description: string;
-            category: string;
-            isCancelled?: boolean;
-            city: string;
-            venue: string;
-            /** Format: double */
-            latitude?: number | string;
-            /** Format: double */
-            longitude?: number | string;
         };
         CreateActivityDto: {
             title?: string;
@@ -725,6 +747,23 @@ export interface components {
         ForgotPasswordRequest: {
             email: string;
         };
+        GetActivityDto: {
+            id: string;
+            isCancelled?: boolean;
+            hostId: string;
+            attendees?: components["schemas"]["ProfileDto"][];
+            title?: string;
+            /** Format: date-time */
+            date?: string;
+            description?: string;
+            category?: string;
+            city?: string;
+            venue?: string;
+            /** Format: double */
+            latitude?: null | number | string;
+            /** Format: double */
+            longitude?: null | number | string;
+        };
         HttpValidationProblemDetails: {
             type?: null | string;
             title?: null | string;
@@ -750,6 +789,12 @@ export interface components {
             password: string;
             twoFactorCode?: null | string;
             twoFactorRecoveryCode?: null | string;
+        };
+        ProfileDto: {
+            id: string;
+            email: string;
+            displayName?: null | string;
+            imageUrl?: null | string;
         };
         RefreshRequest: {
             refreshToken: string;
@@ -783,12 +828,6 @@ export interface components {
             recoveryCodes?: null | string[];
             isTwoFactorEnabled: boolean;
             isMachineRemembered: boolean;
-        };
-        UserInfo: {
-            id: string;
-            email: string;
-            displayName?: null | string;
-            imageUrl?: null | string;
         };
     };
     responses: never;

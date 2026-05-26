@@ -1,6 +1,7 @@
 'use client'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { useUser, useUserName } from '@/components/providers/auth-provider'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -71,17 +72,21 @@ export function NavUser() {
 
 NavUser.Identity = function Identity() {
   const { state } = useSidebar()
+  const user = useUser()
+  const userName = useUserName()
+  const userFallback = useUserName(2)
 
   return (
     <>
       <Avatar className={cn('size-9 rounded-full', { 'size-8': state === 'collapsed' })}>
-        <AvatarFallback className="rounded-full">A</AvatarFallback>
+        <AvatarImage src={user?.imageUrl || ''} alt={userName} />
+        <AvatarFallback className="rounded-full">{userFallback}</AvatarFallback>
       </Avatar>
 
       <div className="grid flex-1 gap-0.5 text-left text-[13px] leading-tight">
-        <span className="text-muted-foreground truncate font-medium">Admin</span>
+        <span className="text-muted-foreground truncate font-medium">{}</span>
 
-        <span className="truncate text-xs">test@gmail.com</span>
+        <span className="truncate text-xs">{user?.email}</span>
       </div>
     </>
   )
