@@ -17,4 +17,10 @@ export const profileImageSchema = z.object({
     ),
 })
 
+export const profileInfoSchema = z.object({
+  name: z.string(),
+  bio: z.string(),
+})
+
 export type ProfileImageSchemaProps = z.infer<typeof profileImageSchema>
+export type ProfileInfoSchemaProps = z.infer<typeof profileInfoSchema>

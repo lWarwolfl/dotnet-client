@@ -60,13 +60,13 @@ export default function ActivityUpdateDrawer({ data }: ActivityUpdateDrawerProps
   })
 
   const { mutate: mutateUpdateActivity, isPending: isPendingUpdateActivity } =
-    privateClientHooks.useMutation('put', '/api/Activities')
+    privateClientHooks.useMutation('put', '/api/Activities/{id}')
 
   function onSubmit(values: ActivityUpdateSchemaProps) {
-    const { date, ...rest } = values
+    const { date, id, ...rest } = values
 
     mutateUpdateActivity(
-      { body: { date: date.toISOString(), ...rest } },
+      { body: { date: date.toISOString(), ...rest }, params: { path: { id } } },
       {
         onSuccess: () => {
           toast.success('Activity updated successfully')
