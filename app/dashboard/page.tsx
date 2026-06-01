@@ -1,35 +1,9 @@
-import { Button } from '@/components/ui/button'
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty'
-import { RiHome4Line } from '@remixicon/react'
-import Link from 'next/link'
+import ProfileImage from '@/features/panel/components/dashboard/ProfileImage'
 
 export default async function DashboardPage() {
   return (
-    <Empty>
-      <EmptyHeader>
-        <EmptyMedia variant="icon">
-          <RiHome4Line className="size-6" />
-        </EmptyMedia>
-
-        <EmptyTitle>No activities yet</EmptyTitle>
-
-        <EmptyDescription>You can start adding them right away!</EmptyDescription>
-      </EmptyHeader>
-
-      <EmptyContent>
-        <div className="flex gap-2">
-          <Button asChild>
-            <Link href="/dashboard/games">Go now</Link>
-          </Button>
-        </div>
-      </EmptyContent>
-    </Empty>
+    <div className="flex flex-1 flex-col items-center justify-center gap-4">
+      <ProfileImage />
+    </div>
   )
 }

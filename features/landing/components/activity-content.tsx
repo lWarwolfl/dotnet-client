@@ -81,16 +81,18 @@ export default function ActivityContent({ data }: ActivityContentProps) {
         </div>
       ) : null}
 
-      <div className="flex items-center gap-3">
-        <RiBuildingLine className="size-5 shrink-0" />
+      <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <div className="flex items-center gap-3">
+          <RiBuildingLine className="size-5 shrink-0" />
 
-        {data.city}
-      </div>
+          {data.city}
+        </div>
 
-      <div className="flex items-center gap-3">
-        <RiStoreLine className="size-5 shrink-0" />
+        <div className="flex items-center gap-3">
+          <RiStoreLine className="size-5 shrink-0" />
 
-        {data.venue}
+          {data.venue}
+        </div>
       </div>
 
       <p>{data.description}</p>
