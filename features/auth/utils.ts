@@ -1,7 +1,7 @@
-import { UserType } from '@/features/api/types/entities'
+import { ProfileType } from '@/features/api/types/entities'
 
-export function getUsername(user: UserType | null | undefined, characters?: number): string {
-  const username = user?.displayName || user?.email.split('@')[0] || 'User'
+export function getUsername(user: ProfileType | null | undefined, characters?: number): string {
+  const username = user?.displayName || 'User'
 
   if (characters) return username.slice(0, characters)
 

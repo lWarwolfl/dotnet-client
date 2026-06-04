@@ -4,7 +4,7 @@ import { SubmitButton } from '@/components/common/submit-button'
 import { useUser } from '@/components/providers/auth-provider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { privateClientHooks } from '@/features/api/client'
-import { ActivityType, UserType } from '@/features/api/types/entities'
+import { ActivityType, ProfileType } from '@/features/api/types/entities'
 import { getUsername } from '@/features/auth/utils'
 import { RiBuildingLine, RiStoreLine } from '@remixicon/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -116,7 +116,7 @@ export default function ActivityContent({ data }: ActivityContentProps) {
   )
 }
 
-ActivityContent.Attendee = function Attendee({ data }: { data: UserType }) {
+ActivityContent.Attendee = function Attendee({ data }: { data: ProfileType }) {
   const userName = getUsername(data)
   const userNameFallback = getUsername(data, 2)
 

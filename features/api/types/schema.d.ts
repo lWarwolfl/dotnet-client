@@ -443,9 +443,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["ProfileDto"];
-                        "application/json": components["schemas"]["ProfileDto"];
-                        "text/json": components["schemas"]["ProfileDto"];
+                        "text/plain": components["schemas"]["UserInfoDto"];
+                        "application/json": components["schemas"]["UserInfoDto"];
+                        "text/json": components["schemas"]["UserInfoDto"];
                     };
                 };
             };
@@ -925,9 +925,8 @@ export interface components {
         };
         ProfileDto: {
             id: string;
-            email: string;
             bio?: null | string;
-            displayName?: null | string;
+            displayName: string;
             imageUrl?: null | string;
         };
         RefreshRequest: {
@@ -962,6 +961,13 @@ export interface components {
             recoveryCodes?: null | string[];
             isTwoFactorEnabled: boolean;
             isMachineRemembered: boolean;
+        };
+        UserInfoDto: {
+            id: string;
+            email: string;
+            bio?: null | string;
+            displayName: string;
+            imageUrl?: null | string;
         };
     };
     responses: never;

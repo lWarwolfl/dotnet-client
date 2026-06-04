@@ -1,20 +1,20 @@
 'use client'
 
-import { UserType } from '@/features/api/types/entities'
+import { UserInfoType } from '@/features/api/types/entities'
 import { getUsername } from '@/features/auth/utils'
 import { createContext, memo, useContext, useState, type PropsWithChildren } from 'react'
 import { createStore, useStore, type StoreApi } from 'zustand'
 
 type AuthProvider = {
-  user: UserType | undefined | null
-  updateUser: (user: UserType) => void
+  user: UserInfoType | undefined | null
+  updateUser: (user: UserInfoType) => void
 }
 
 const AuthContext = createContext<StoreApi<AuthProvider> | undefined>(undefined)
 export const AuthProvider = memo(function UserProvider({
   children,
   user,
-}: PropsWithChildren<{ user: UserType | undefined | null }>) {
+}: PropsWithChildren<{ user: UserInfoType | undefined | null }>) {
   const [store] = useState(() =>
     createStore<AuthProvider>((set) => ({
       user: user,
