@@ -706,6 +706,88 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["Command"];
+                    "text/json": components["schemas"]["Command"];
+                    "application/*+json": components["schemas"]["Command"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["GetCommentDto"];
+                        "application/json": components["schemas"]["GetCommentDto"];
+                        "text/json": components["schemas"]["GetCommentDto"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Activities/{id}/comments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["GetCommentDto"];
+                        "application/json": components["schemas"]["GetCommentDto"];
+                        "text/json": components["schemas"]["GetCommentDto"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/Profiles/update-image": {
         parameters: {
             query?: never;
@@ -839,8 +921,7 @@ export interface components {
             refreshToken: string;
         };
         Command: {
-            displayName?: string;
-            bio?: string;
+            createCommentDto: components["schemas"]["CreateCommentDto"];
         };
         CreateActivityDto: {
             title?: string;
@@ -854,6 +935,10 @@ export interface components {
             latitude?: null | number | string;
             /** Format: double */
             longitude?: null | number | string;
+        };
+        CreateCommentDto: {
+            activityId: string;
+            body: string;
         };
         EditActivityDto: {
             id?: string;
@@ -888,6 +973,15 @@ export interface components {
             latitude?: null | number | string;
             /** Format: double */
             longitude?: null | number | string;
+        };
+        GetCommentDto: {
+            id: string;
+            /** Format: date-time */
+            createdAt?: string;
+            userId: string;
+            displayName: string;
+            imageUrl?: null | string;
+            body: string;
         };
         HttpValidationProblemDetails: {
             type?: null | string;

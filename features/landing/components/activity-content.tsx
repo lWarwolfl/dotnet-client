@@ -4,12 +4,14 @@ import { SubmitButton } from '@/components/common/submit-button'
 import { useUser } from '@/components/providers/auth-provider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { privateClientHooks } from '@/features/api/client'
-import { ActivityType, ProfileType } from '@/features/api/types/entities'
+import { ActivityType, CommentType, ProfileType } from '@/features/api/types/entities'
 import { getUsername } from '@/features/auth/utils'
+import { useSignalR } from '@/features/signalr/useSignalR'
 import { RiBuildingLine, RiStoreLine } from '@remixicon/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { format, formatDistanceToNow } from 'date-fns'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export type ActivityContentProps = React.ComponentProps<'div'> & {
@@ -109,6 +111,10 @@ export default function ActivityContent({ data }: ActivityContentProps) {
         })}
       </div>
 
+      <span>Comments</span>
+
+      {data.id ? <ActivityContent.Comments data={data.id} /> : null}
+
       <SubmitButton loading={isPending} onClick={() => onSubmit()}>
         {buttonText}
       </SubmitButton>
@@ -128,6 +134,50 @@ ActivityContent.Attendee = function Attendee({ data }: { data: ProfileType }) {
       </Avatar>
 
       {userName}
+    </div>
+  )
+}
+
+ActivityContent.Comments = function Comments({ data }: { data: string }) {
+  const connection = useSignalR(data)
+  const [comments, setComments] = useState<CommentType[]>([])
+
+  useEffect(() => {
+    if (!connection) return
+
+    connection.on('LoadComments', (comments: CommentType[]) => {
+      setComments(comments)
+    })
+
+    connection.on('ReceiveComment', (comment: CommentType) => {
+      setComments((prev) => [...prev, comment])
+    })
+
+    return () => {
+      connection.off('LoadComments')
+      connection.off('ReceiveComment')
+    }
+  }, [connection])
+
+  // const sendCommentToServer = async () => {
+  //   if (connection && connection.state === 'Connected') {
+  //     try {
+  //       await connection.invoke('SendComment', 'Hello from Next.js!')
+  //     } catch (err) {
+  //       toast.error(`Error sending message: ${getErrorMessage(err)}`)
+  //     }
+  //   }
+  // }
+
+  return <div className="flex items-center gap-2">{JSON.stringify(comments)}</div>
+}
+
+ActivityContent.Comment = function Comment({ data }: { data: CommentType }) {
+  return (
+    <div className="bg-muted text-muted-foreground flex flex-col gap-4 p-4 sm:p-6">
+      <ActivityContent.Attendee data={data} />
+
+      {data.body}
     </div>
   )
 }
