@@ -11,19 +11,19 @@ export default async function proxy(request: NextRequest) {
     await publicClient.GET('/api/Account/user-info', { headers: { Cookie: rawCookieHeader } })
   ).data?.id
 
-  //for dashboard
-  if (pathname.startsWith('/dashboard')) {
-    if (!user) return NextResponse.redirect(new URL('/auth/signin', request.url))
-  }
-
-  //for auth page
-  else if (pathname.startsWith('/auth')) {
+  //for auth pages
+  if (pathname.startsWith('/auth')) {
     if (user) return NextResponse.redirect(new URL('/', request.url))
     return NextResponse.next()
   }
 
-  //for index page
-  else if (pathname === '/') {
+  //for other pages
+  else if (
+    pathname === '/' ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/activity') ||
+    pathname.startsWith('/user')
+  ) {
     if (!user) return NextResponse.redirect(new URL('/auth/signin', request.url))
   }
 }

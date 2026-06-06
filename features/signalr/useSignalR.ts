@@ -3,7 +3,12 @@
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { useEffect, useState } from 'react'
 
-export const useSignalR = (activityId: string) => {
+type SignalRListeners = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [eventName: string]: (...args: any[]) => void
+}
+
+export const useSignalR = (activityId: string, listeners?: SignalRListeners) => {
   const [connection, setConnection] = useState<HubConnection | null>(null)
 
   useEffect(() => {
@@ -12,10 +17,16 @@ export const useSignalR = (activityId: string) => {
     let isMounted = true
 
     const newConnection = new HubConnectionBuilder()
-      .withUrl(`${process.env.NEXT_PUBLIC_SIGNALR_URL}?activityId=${activityId}`)
+      .withUrl(`${process.env.NEXT_PUBLIC_SIGNALR_URL}?ActivityId=${activityId}`)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build()
+
+    if (listeners) {
+      Object.entries(listeners).forEach(([event, callback]) => {
+        newConnection.on(event, callback)
+      })
+    }
 
     const startConnection = async () => {
       if (!isMounted) return
@@ -48,10 +59,18 @@ export const useSignalR = (activityId: string) => {
     return () => {
       isMounted = false
       clearTimeout(startTimer)
+
+      if (listeners) {
+        Object.keys(listeners).forEach((event) => {
+          newConnection.off(event)
+        })
+      }
+
       if (newConnection.state === 'Connected') {
         newConnection.stop().catch(() => {})
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityId])
 
   return connection

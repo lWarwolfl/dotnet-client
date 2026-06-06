@@ -3,15 +3,22 @@
 import { SubmitButton } from '@/components/common/submit-button'
 import { useUser } from '@/components/providers/auth-provider'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Textarea } from '@/components/ui/textarea'
 import { privateClientHooks } from '@/features/api/client'
 import { ActivityType, CommentType, ProfileType } from '@/features/api/types/entities'
 import { getUsername } from '@/features/auth/utils'
+import { commentSchema, CommentSchemaProps } from '@/features/landing/schemas/comment-schema'
 import { useSignalR } from '@/features/signalr/useSignalR'
+import { getErrorMessage } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { RiBuildingLine, RiStoreLine } from '@remixicon/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { format, formatDistanceToNow } from 'date-fns'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 export type ActivityContentProps = React.ComponentProps<'div'> & {
@@ -111,13 +118,13 @@ export default function ActivityContent({ data }: ActivityContentProps) {
         })}
       </div>
 
-      <span>Comments</span>
-
-      {data.id ? <ActivityContent.Comments data={data.id} /> : null}
-
       <SubmitButton loading={isPending} onClick={() => onSubmit()}>
         {buttonText}
       </SubmitButton>
+
+      <span>Comments</span>
+
+      {data.id ? <ActivityContent.Comments activityId={data.id} /> : null}
     </div>
   )
 }
@@ -127,55 +134,109 @@ ActivityContent.Attendee = function Attendee({ data }: { data: ProfileType }) {
   const userNameFallback = getUsername(data, 2)
 
   return (
-    <div className="flex items-center gap-2">
+    <Link
+      href={`/user/${data.id}`}
+      target="_blank"
+      className="flex cursor-pointer items-center gap-2"
+    >
       <Avatar>
         <AvatarImage src={data.imageUrl || ''} alt={userName} />
         <AvatarFallback>{userNameFallback}</AvatarFallback>
       </Avatar>
 
       {userName}
+    </Link>
+  )
+}
+
+ActivityContent.Comments = function Comments({ activityId }: { activityId: string }) {
+  const [comments, setComments] = useState<CommentType[]>([])
+
+  const connection = useSignalR(activityId, {
+    LoadComments: (loadedComments: CommentType[]) => {
+      setComments(loadedComments)
+    },
+    ReceiveComment: (comment: CommentType) => {
+      setComments((prev) => [comment, ...prev])
+    },
+  })
+
+  const form = useForm<CommentSchemaProps>({
+    mode: 'onSubmit',
+    resolver: zodResolver(commentSchema),
+    defaultValues: {
+      body: '',
+    },
+  })
+
+  const sendCommentToServer = async (values: CommentSchemaProps) => {
+    if (connection && connection.state === 'Connected') {
+      try {
+        await connection.invoke('SendComment', {
+          createCommentDto: {
+            activityId,
+            body: values.body,
+          },
+        })
+        form.reset()
+      } catch (err) {
+        toast.error(`Error sending message: ${getErrorMessage(err)}`)
+      }
+    }
+  }
+
+  return (
+    <div className="flex w-full max-w-xl flex-col items-center gap-4">
+      <form
+        id="comment-form"
+        className="flex w-full flex-col items-center gap-4"
+        onSubmit={form.handleSubmit(sendCommentToServer)}
+      >
+        <FieldGroup className="flex w-full flex-col items-center gap-4">
+          <Controller
+            name="body"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="body">Comment</FieldLabel>
+
+                <Textarea
+                  {...field}
+                  id="body"
+                  placeholder="Your message..."
+                  required
+                  autoComplete="off"
+                  rows={7}
+                  aria-invalid={fieldState.invalid}
+                />
+                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+
+          <SubmitButton>Send</SubmitButton>
+        </FieldGroup>
+      </form>
+
+      <div className="flex w-full flex-col gap-4">
+        {comments.map((comment) => (
+          <ActivityContent.Comment key={comment.id} data={comment} />
+        ))}
+      </div>
     </div>
   )
 }
 
-ActivityContent.Comments = function Comments({ data }: { data: string }) {
-  const connection = useSignalR(data)
-  const [comments, setComments] = useState<CommentType[]>([])
-
-  useEffect(() => {
-    if (!connection) return
-
-    connection.on('LoadComments', (comments: CommentType[]) => {
-      setComments(comments)
-    })
-
-    connection.on('ReceiveComment', (comment: CommentType) => {
-      setComments((prev) => [...prev, comment])
-    })
-
-    return () => {
-      connection.off('LoadComments')
-      connection.off('ReceiveComment')
-    }
-  }, [connection])
-
-  // const sendCommentToServer = async () => {
-  //   if (connection && connection.state === 'Connected') {
-  //     try {
-  //       await connection.invoke('SendComment', 'Hello from Next.js!')
-  //     } catch (err) {
-  //       toast.error(`Error sending message: ${getErrorMessage(err)}`)
-  //     }
-  //   }
-  // }
-
-  return <div className="flex items-center gap-2">{JSON.stringify(comments)}</div>
-}
-
 ActivityContent.Comment = function Comment({ data }: { data: CommentType }) {
   return (
-    <div className="bg-muted text-muted-foreground flex flex-col gap-4 p-4 sm:p-6">
-      <ActivityContent.Attendee data={data} />
+    <div className="bg-muted text-muted-foreground flex w-full flex-col gap-4 p-4 sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <ActivityContent.Attendee data={data} />
+
+        <span className="text-muted-foreground text-sm">
+          {data.createdAt ? formatDistanceToNow(data.createdAt, { addSuffix: true }) : null}
+        </span>
+      </div>
 
       {data.body}
     </div>
