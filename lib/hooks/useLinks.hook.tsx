@@ -1,5 +1,5 @@
 import { usePathHelper } from '@/lib/hooks/usePathHelper.hook'
-import { RiBeerLine, RiHome4Line } from '@remixicon/react'
+import { RiBeerLine, RiHome4Line, RiUserReceivedLine, RiUserSharedLine } from '@remixicon/react'
 import { useMemo } from 'react'
 
 export function useLinks() {
@@ -32,6 +32,20 @@ export function useLinks() {
         name: 'Dashboard',
         icon: <RiHome4Line />,
         path: '/dashboard',
+        breadcrumb: [],
+      },
+      {
+        type: 'main',
+        name: 'Followings',
+        icon: <RiUserSharedLine />,
+        path: '/dashboard/followings',
+        breadcrumb: [],
+      },
+      {
+        type: 'main',
+        name: 'Followers',
+        icon: <RiUserReceivedLine />,
+        path: '/dashboard/followers',
         breadcrumb: [],
       },
       {

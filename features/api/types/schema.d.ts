@@ -909,6 +909,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Profiles/{userId}/follow": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Profiles/{userId}/follow-list": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    predicate?: components["schemas"]["FollowPredicate"];
+                };
+                header?: never;
+                path: {
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -939,6 +1011,8 @@ export interface components {
         CreateCommentDto: {
             activityId: string;
             body: string;
+            /** Format: date-time */
+            createdAt?: string;
         };
         EditActivityDto: {
             id?: string;
@@ -954,6 +1028,7 @@ export interface components {
             /** Format: double */
             longitude?: null | number | string;
         };
+        FollowPredicate: number;
         ForgotPasswordRequest: {
             email: string;
         };
@@ -976,12 +1051,12 @@ export interface components {
         };
         GetCommentDto: {
             id: string;
-            /** Format: date-time */
-            createdAt?: string;
             userId: string;
             displayName: string;
             imageUrl?: null | string;
             body: string;
+            /** Format: date-time */
+            createdAt?: string;
         };
         HttpValidationProblemDetails: {
             type?: null | string;
@@ -1022,6 +1097,11 @@ export interface components {
             bio?: null | string;
             displayName: string;
             imageUrl?: null | string;
+            following?: boolean;
+            /** Format: int32 */
+            followerCount?: number | string;
+            /** Format: int32 */
+            followingCount?: number | string;
         };
         RefreshRequest: {
             refreshToken: string;
