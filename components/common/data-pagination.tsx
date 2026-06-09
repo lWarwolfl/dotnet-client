@@ -1,97 +1,36 @@
 'use client'
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination'
+import { Button } from '@/components/ui/button'
+import { RiArrowLeftLine, RiArrowRightLine } from '@remixicon/react'
 
-export type DataPaginationProps = {
-  pagination: {
-    page: number
-    totalPages: number
-    limit: number
-  }
-  onPageChange: (page: number) => void
+interface DataPaginationProps {
+  nextCursor?: string | null
+  prevCursor?: string | null
+  isFetching: boolean
+  onNavigate: (cursor: string | null, action: 'next' | 'back') => void
 }
 
-export function DataPagination({ pagination, onPageChange }: DataPaginationProps) {
-  const { page, totalPages } = pagination
-
-  const getPageNumbers = () => {
-    const pages: (number | 'ellipsis')[] = []
-    const showEllipsis = totalPages > 7
-
-    if (!showEllipsis) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
-      }
-    } else {
-      pages.push(1)
-
-      if (page <= 3) {
-        pages.push(2, 3, 4, 'ellipsis', totalPages)
-      } else if (page >= totalPages - 2) {
-        pages.push('ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
-      } else {
-        pages.push('ellipsis', page - 1, page, page + 1, 'ellipsis', totalPages)
-      }
-    }
-
-    return pages
-  }
-
-  const pageNumbers = getPageNumbers()
-
+export default function DataPagination({ nextCursor, prevCursor, isFetching, onNavigate }: DataPaginationProps) {
   return (
-    <Pagination>
-      <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            href="#"
-            onClick={(e) => {
-              e.preventDefault()
-              if (page > 1) onPageChange(page - 1)
-            }}
-            className={page <= 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-          />
-        </PaginationItem>
-
-        {pageNumbers.map((pageNum, index) => (
-          <PaginationItem key={index}>
-            {pageNum === 'ellipsis' ? (
-              <PaginationEllipsis />
-            ) : (
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault()
-                  onPageChange(pageNum)
-                }}
-                isActive={page === pageNum}
-                className="cursor-pointer"
-              >
-                {pageNum}
-              </PaginationLink>
-            )}
-          </PaginationItem>
-        ))}
-
-        <PaginationItem>
-          <PaginationNext
-            href="#"
-            onClick={(e) => {
-              e.preventDefault()
-              if (page < totalPages) onPageChange(page + 1)
-            }}
-            className={page >= totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+    <div className="mt-4 flex items-center justify-between border-t pt-4">
+      <Button
+        variant="outline"
+        onClick={() => onNavigate(prevCursor ?? null, 'back')}
+        disabled={!prevCursor || isFetching}
+        className="gap-2"
+      >
+        <RiArrowLeftLine className="size-4" />
+        Back
+      </Button>
+      <Button
+        variant="outline"
+        onClick={() => onNavigate(nextCursor ?? null, 'next')}
+        disabled={!nextCursor || isFetching}
+        className="gap-2"
+      >
+        Next
+        <RiArrowRightLine className="size-4" />
+      </Button>
+    </div>
   )
 }

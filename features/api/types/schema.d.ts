@@ -533,7 +533,10 @@ export interface paths {
         };
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    after?: string;
+                    before?: string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -546,9 +549,9 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "text/plain": components["schemas"]["GetActivityDto"][];
-                        "application/json": components["schemas"]["GetActivityDto"][];
-                        "text/json": components["schemas"]["GetActivityDto"][];
+                        "text/plain": components["schemas"]["PagedListOfGetActivityDtoAndDateTime"];
+                        "application/json": components["schemas"]["PagedListOfGetActivityDtoAndDateTime"];
+                        "text/json": components["schemas"]["PagedListOfGetActivityDtoAndDateTime"];
                     };
                 };
             };
@@ -1091,6 +1094,13 @@ export interface components {
             password: string;
             twoFactorCode?: null | string;
             twoFactorRecoveryCode?: null | string;
+        };
+        PagedListOfGetActivityDtoAndDateTime: {
+            items?: components["schemas"]["GetActivityDto"][];
+            /** Format: date-time */
+            nextCursor?: null | string;
+            /** Format: date-time */
+            prevCursor?: null | string;
         };
         ProfileDto: {
             id: string;
